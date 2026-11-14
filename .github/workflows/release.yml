@@ -1,0 +1,29 @@
+name: Release
+
+# Packagist (ariaservice/arianet) picks the tag up by itself once the package is
+# registered there with the GitHub hook; this workflow only checks the tag and
+# creates the GitHub release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: "8.3"
+          extensions: curl, json
+          tools: composer:v2
+      - name: Tag matches Client::VERSION
+        run: grep -q "public const VERSION = '${GITHUB_REF_NAME#v}';" src/Client.php || { echo "Client::VERSION is not ${GITHUB_REF_NAME#v}"; exit 1; }
+      - run: composer install --no-interaction --no-progress && vendor/bin/phpunit
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --generate-notes
