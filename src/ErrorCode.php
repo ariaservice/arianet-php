@@ -122,6 +122,7 @@ final class ErrorCode
     public const INVALID_USER_DATA = 'invalid_user_data';
     public const INVALID_WINDOW = 'invalid_window';
     public const IP = 'ip_';
+    public const IP_BILLED_BY_IPLEASE = 'ip_billed_by_iplease';
     public const IP_CHANGE_FEE_NOT_CONFIRMED = 'ip_change_fee_not_confirmed';
     public const IP_CHANGE_IN_PROGRESS = 'ip_change_in_progress';
     public const IP_CHANGE_LIMIT_REACHED = 'ip_change_limit_reached';
@@ -130,6 +131,7 @@ final class ErrorCode
     public const IP_NOT_ALLOWED = 'ip_not_allowed';
     public const IP_NOT_FOUND = 'ip_not_found';
     public const IP_NOT_ROUTED = 'ip_not_routed';
+    public const IP_ORDERS_MOVED = 'ip_orders_moved';
     public const IP_OUTSIDE_NETWORK = 'ip_outside_network';
     public const IP_RENEW_AUTOMATIC = 'ip_renew_automatic';
     public const IP_RESERVED = 'ip_reserved';
@@ -186,6 +188,7 @@ final class ErrorCode
     public const OVH_ORDER_USED = 'ovh_order_used';
     public const PANEL_ACCOUNT_MISSING = 'panel_account_missing';
     public const PANEL_UNAVAILABLE = 'panel_unavailable';
+    public const PAYMENT_HOLD = 'payment_hold';
     public const PHP_SELECTOR_DISABLED = 'php_selector_disabled';
     public const PHP_SELECTOR_NEEDS_CAGEFS = 'php_selector_needs_cagefs';
     public const PHP_SELECTOR_UNAVAILABLE = 'php_selector_unavailable';
@@ -303,6 +306,7 @@ final class ErrorCode
     public const UNKNOWN_IP_OFFER = 'unknown_ip_offer';
     public const UNLIMITED = 'unlimited';
     public const UNPRICED_ORDER = 'unpriced_order';
+    public const UNSUPPORTED_IMAGE = 'unsupported_image';
     public const UPSTREAM_ERROR = 'upstream_error';
     public const UPSTREAM_UNAVAILABLE = 'upstream_unavailable';
     public const USER_DATA_TOO_LARGE = 'user_data_too_large';
