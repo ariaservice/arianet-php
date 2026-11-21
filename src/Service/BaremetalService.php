@@ -132,6 +132,19 @@ final class BaremetalService extends AbstractService
     }
 
     /**
+     * Your servers an additional IP (bought in the IP product) can go to, with each datacenter's registry, and why not
+     *
+     * `GET /provider-ips/servers`
+     *
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function listProviderIpServers(array $options = []): mixed
+    {
+        return $this->send('GET', '/baremetal/v1/provider-ips/servers', [], null, $options, false);
+    }
+
+    /**
      * Price a configuration (nothing held)
      *
      * `POST /quote`

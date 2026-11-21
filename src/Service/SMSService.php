@@ -14,6 +14,33 @@ final class SMSService extends AbstractService
     protected const PREFIX = '/sms/v1';
 
     /**
+     * The activation request and whether one is needed
+     *
+     * `GET /application`
+     *
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function getApplication(array $options = []): mixed
+    {
+        return $this->send('GET', '/sms/v1/application', [], null, $options, false);
+    }
+
+    /**
+     * Submit the activation request (reviewed before the account can send)
+     *
+     * `POST /application`
+     *
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function createApplication(mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/sms/v1/application', [], $body, $options, false);
+    }
+
+    /**
      * List batches
      *
      * `GET /batches`
@@ -140,7 +167,7 @@ final class SMSService extends AbstractService
     }
 
     /**
-     * Send a message to one or more recipients (or schedule it)
+     * Send an approved template to up to 100 recipients (only for accounts staff opened for direct sending; otherwise 403 direct_send_disabled - use /verify/lookup)
      *
      * `POST /messages`
      *
@@ -291,6 +318,20 @@ final class SMSService extends AbstractService
     public function deleteTemplate(string $template, array $options = []): mixed
     {
         return $this->send('DELETE', '/sms/v1/templates/' . self::segment($template), [], null, $options, false);
+    }
+
+    /**
+     * Send an approved template to one recipient (verification codes, notices)
+     *
+     * `POST /verify/lookup`
+     *
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function createVerifyLookup(mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/sms/v1/verify/lookup', [], $body, $options, false);
     }
 
     /**

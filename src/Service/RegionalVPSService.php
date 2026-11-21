@@ -201,7 +201,7 @@ final class RegionalVPSService extends AbstractService
     }
 
     /**
-     * Set the root password. Without one it is generated and returned once in this answer
+     * Set the root password. Without one it is generated and returned once in this answer. An image of kind routeros or other has none (422 unsupported_image: use the console)
      *
      * `POST /servers/{id}/reset-password`
      *
