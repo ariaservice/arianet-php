@@ -17,6 +17,7 @@ final class ErrorCode
     public const ACCOUNT_TERMINATED = 'account_terminated';
     public const ACTION_FAILED = 'action_failed';
     public const ACTION_IN_PROGRESS = 'action_in_progress';
+    public const ALLOWLIST_FULL = 'allowlist_full';
     public const ALREADY = 'already';
     public const ALREADY_ADOPTED = 'already_adopted';
     public const ALREADY_ASSIGNED = 'already_assigned';
@@ -27,10 +28,21 @@ final class ErrorCode
     public const APPLIED_BY_SELECTOR = 'applied_by_selector';
     public const AWAITING_PRICE_DIFFERENCE = 'awaiting_price_difference';
     public const BACKUP_ALREADY_ENABLED = 'backup_already_enabled';
+    public const BACKUP_BUSY = 'backup_busy';
+    public const BACKUP_CAPACITY = 'backup_capacity';
+    public const BACKUP_FAILED = 'backup_failed';
     public const BACKUP_IN_PROGRESS = 'backup_in_progress';
     public const BACKUP_NOT_ENABLED = 'backup_not_enabled';
+    public const BACKUP_NOT_FOUND = 'backup_not_found';
+    public const BACKUP_SLOTS_FULL = 'backup_slots_full';
+    public const BACKUP_TIMEOUT = 'backup_timeout';
     public const BACKUP_TOO_SOON = 'backup_too_soon';
+    public const BACKUPS_DISABLED = 'backups_disabled';
+    public const BACKUPS_ENABLED = 'backups_enabled';
     public const BAD_REQUEST = 'bad_request';
+    public const BLOCK_FOREIGN = 'block_foreign';
+    public const BLOCK_NOT_FOUND = 'block_not_found';
+    public const BLOCK_SHARED = 'block_shared';
     public const BYOIP_NOT_FOUND = 'byoip_not_found';
     public const BYOIP_WRONG_STAGE = 'byoip_wrong_stage';
     public const CAGEFS_NOT_READY = 'cagefs_not_ready';
@@ -63,6 +75,7 @@ final class ErrorCode
     public const FIREWALL_PROTECTED = 'firewall_protected';
     public const FLOATING_IP_BUSY = 'floating_ip_busy';
     public const FORBIDDEN = 'forbidden';
+    public const FOREIGN_BAN = 'foreign_ban';
     public const GATE_REQUIRED = 'gate_required';
     public const GUARD_REFUSED = 'guard_refused';
     public const HOST_PIN_MISMATCH = 'host_pin_mismatch';
@@ -111,6 +124,7 @@ final class ErrorCode
     public const INVALID_ROUTE = 'invalid_route';
     public const INVALID_RULE = 'invalid_rule';
     public const INVALID_SIZE = 'invalid_size';
+    public const INVALID_SNAPSHOT_NAME = 'invalid_snapshot_name';
     public const INVALID_SSH_KEY = 'invalid_ssh_key';
     public const INVALID_STAGE = 'invalid_stage';
     public const INVALID_STATE = 'invalid_state';
@@ -122,6 +136,7 @@ final class ErrorCode
     public const INVALID_USER_DATA = 'invalid_user_data';
     public const INVALID_WINDOW = 'invalid_window';
     public const IP = 'ip_';
+    public const IP_BILLED_BY_IPLEASE = 'ip_billed_by_iplease';
     public const IP_CHANGE_FEE_NOT_CONFIRMED = 'ip_change_fee_not_confirmed';
     public const IP_CHANGE_IN_PROGRESS = 'ip_change_in_progress';
     public const IP_CHANGE_LIMIT_REACHED = 'ip_change_limit_reached';
@@ -130,6 +145,7 @@ final class ErrorCode
     public const IP_NOT_ALLOWED = 'ip_not_allowed';
     public const IP_NOT_FOUND = 'ip_not_found';
     public const IP_NOT_ROUTED = 'ip_not_routed';
+    public const IP_ORDERS_MOVED = 'ip_orders_moved';
     public const IP_OUTSIDE_NETWORK = 'ip_outside_network';
     public const IP_RENEW_AUTOMATIC = 'ip_renew_automatic';
     public const IP_RESERVED = 'ip_reserved';
@@ -155,6 +171,7 @@ final class ErrorCode
     public const NETWORK_NOT_FOUND = 'network_not_found';
     public const NETWORK_NOT_READY = 'network_not_ready';
     public const NETWORK_REQUIRED = 'network_required';
+    public const NO_BACKUP = 'no_backup';
     public const NO_CART_FOR_IP = 'no_cart_for_ip';
     public const NO_DEFAULT_WALLET = 'no_default_wallet';
     public const NO_LIVE_DATA = 'no_live_data';
@@ -163,6 +180,7 @@ final class ErrorCode
     public const NO_PUBLIC_IPV4 = 'no_public_ipv4';
     public const NO_RATE = 'no_rate';
     public const NO_TAX = 'no_tax';
+    public const NOT_APPLICABLE = 'not_applicable';
     public const NOT_APPLIED = 'not_applied';
     public const NOT_ASSIGNED = 'not_assigned';
     public const NOT_ATTACHED = 'not_attached';
@@ -186,6 +204,7 @@ final class ErrorCode
     public const OVH_ORDER_USED = 'ovh_order_used';
     public const PANEL_ACCOUNT_MISSING = 'panel_account_missing';
     public const PANEL_UNAVAILABLE = 'panel_unavailable';
+    public const PAYMENT_HOLD = 'payment_hold';
     public const PHP_SELECTOR_DISABLED = 'php_selector_disabled';
     public const PHP_SELECTOR_NEEDS_CAGEFS = 'php_selector_needs_cagefs';
     public const PHP_SELECTOR_UNAVAILABLE = 'php_selector_unavailable';
@@ -198,6 +217,7 @@ final class ErrorCode
     public const PLAN_NOT_FOUND = 'plan_not_found';
     public const PLAN_SOLD_OUT = 'plan_sold_out';
     public const PLAN_UNAVAILABLE = 'plan_unavailable';
+    public const PMEM = 'pmem';
     public const PREPAID_TERM = 'prepaid_term';
     public const PREVIEW_EXISTS = 'preview_exists';
     public const PREVIEW_READ_ONLY = 'preview_read_only';
@@ -227,8 +247,11 @@ final class ErrorCode
     public const RESCUE_DISABLED = 'rescue_disabled';
     public const RESCUE_ENABLED = 'rescue_enabled';
     public const RESELLER_ACCOUNT_LIMIT = 'reseller_account_limit';
+    public const RESELLER_PACKAGE_EXCEEDS_PLAN = 'reseller_package_exceeds_plan';
     public const RESELLER_RESOURCE_LIMIT = 'reseller_resource_limit';
+    public const RESELLER_UNLIMITED_NOT_ALLOWED = 'reseller_unlimited_not_allowed';
     public const RESOURCE_IN_USE = 'resource_in_use';
+    public const RETAINED_CLAIMED = 'retained_claimed';
     public const ROUTED_ELSEWHERE = 'routed_elsewhere';
     public const RULES_NOT_ACCEPTED = 'rules_not_accepted';
     public const RULES_OUTDATED = 'rules_outdated';
@@ -263,6 +286,7 @@ final class ErrorCode
     public const SERVICE_NOT_FOUND = 'service_not_found';
     public const SERVICE_NOT_THIS_ORDER = 'service_not_this_order';
     public const SERVICE_PREDATES_ORDER = 'service_predates_order';
+    public const SHARED = 'shared';
     public const SHELL_DISABLED = 'shell_disabled';
     public const SHELL_NOT_CONFINED = 'shell_not_confined';
     public const SKU_UNAVAILABLE = 'sku_unavailable';
@@ -303,6 +327,7 @@ final class ErrorCode
     public const UNKNOWN_IP_OFFER = 'unknown_ip_offer';
     public const UNLIMITED = 'unlimited';
     public const UNPRICED_ORDER = 'unpriced_order';
+    public const UNSUPPORTED_IMAGE = 'unsupported_image';
     public const UPSTREAM_ERROR = 'upstream_error';
     public const UPSTREAM_UNAVAILABLE = 'upstream_unavailable';
     public const USER_DATA_TOO_LARGE = 'user_data_too_large';
