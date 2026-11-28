@@ -133,6 +133,81 @@ final class HostingService extends AbstractService
     }
 
     /**
+     * The account's backups: whether its server keeps them, the add-on, its price, the restore points and downloads
+     *
+     * `GET /accounts/{id}/backups`
+     *
+     * @param int|string $id
+     * @param array{'refresh'?: string} $query
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function getBackups(int|string $id, array $query = [], array $options = []): mixed
+    {
+        return $this->send('GET', '/hosting/v1/accounts/' . self::segment($id) . '/backups', $query, null, $options, false);
+    }
+
+    /**
+     * Take a backup now, kept as one of the account's own (the oldest of 3 rotates out)
+     *
+     * `POST /accounts/{id}/backups`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function takeBackup(int|string $id, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/backups', [], null, $options, false);
+    }
+
+    /**
+     * Turn the backup add-on on or off. On is charged for the rest of the term (nothing when this term is already paid for it) and renews with the account; off refunds nothing and hides the restore points at once
+     *
+     * `PUT /accounts/{id}/backups`
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function setBackups(int|string $id, mixed $body, array $options = []): mixed
+    {
+        return $this->send('PUT', '/hosting/v1/accounts/' . self::segment($id) . '/backups', [], $body, $options, false);
+    }
+
+    /**
+     * Build a downloadable archive (a cPanel backup) of a restore point in the account's home; once the action succeeds it is in downloads (its result names the file), fetched with the File Manager login link, and deleted after 48 hours
+     *
+     * `POST /accounts/{id}/backups/{point}/download`
+     *
+     * @param int|string $id
+     * @param string $point
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function downloadBackup(int|string $id, string $point, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/backups/' . self::segment($point) . '/download', [], null, $options, false);
+    }
+
+    /**
+     * Restore a restore point over the account: everything (full), only the files and mail (files) or only the databases. The current data is overwritten; the plan and main domain stay as they are
+     *
+     * `POST /accounts/{id}/backups/{point}/restore`
+     *
+     * @param int|string $id
+     * @param string $point
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function restoreBackup(int|string $id, string $point, mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/backups/' . self::segment($point) . '/restore', [], $body, $options, false);
+    }
+
+    /**
      * CloudLinux on the account: CageFS, symlink protection, its resource limits and the PHP Selector's state
      *
      * `GET /accounts/{id}/cloudlinux`
@@ -403,6 +478,65 @@ final class HostingService extends AbstractService
     }
 
     /**
+     * IPs the server blocked for the account's sites, why, and its allowlist
+     *
+     * `GET /accounts/{id}/firewall`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function getFirewall(int|string $id, array $options = []): mixed
+    {
+        return $this->send('GET', '/hosting/v1/accounts/' . self::segment($id) . '/firewall', [], null, $options, false);
+    }
+
+    /**
+     * Allow an IP: never blocked for the account's sites
+     *
+     * `POST /accounts/{id}/firewall/allowed`
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function allowIp(int|string $id, mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/firewall/allowed', [], $body, $options, false);
+    }
+
+    /**
+     * Take an IP off the account's allowlist
+     *
+     * `DELETE /accounts/{id}/firewall/allowed/{ip}`
+     *
+     * @param int|string $id
+     * @param string $ip
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function disallowIp(int|string $id, string $ip, array $options = []): mixed
+    {
+        return $this->send('DELETE', '/hosting/v1/accounts/' . self::segment($id) . '/firewall/allowed/' . self::segment($ip), [], null, $options, false);
+    }
+
+    /**
+     * Lift a block of an IP raised for the account's sites
+     *
+     * `POST /accounts/{id}/firewall/unblock`
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function unblockIp(int|string $id, mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/firewall/unblock', [], $body, $options, false);
+    }
+
+    /**
      * A one-time login link into the control panel
      *
      * `POST /accounts/{id}/login`
@@ -639,6 +773,70 @@ final class HostingService extends AbstractService
     }
 
     /**
+     * One of the reseller's customer accounts' backups, in the shape of an account's: its restore points (only those taken while the reseller owned it), manual backups, the running action and downloads. price and due_now are null (the add-on is the reseller account's). Also needs hosting:view
+     *
+     * `GET /accounts/{id}/reseller/accounts/{username}/backups`
+     *
+     * @param int|string $id
+     * @param string $username
+     * @param array{'refresh'?: string} $query
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function getResellerAccountBackups(int|string $id, string $username, array $query = [], array $options = []): mixed
+    {
+        return $this->send('GET', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/accounts/' . self::segment($username) . '/backups', $query, null, $options, false);
+    }
+
+    /**
+     * Take a backup of one of the reseller's customer accounts now, kept as one of its own (the oldest of 3 rotates out). Also needs hosting:view and hosting:manage
+     *
+     * `POST /accounts/{id}/reseller/accounts/{username}/backups`
+     *
+     * @param int|string $id
+     * @param string $username
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function resellerTakeAccountBackup(int|string $id, string $username, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/accounts/' . self::segment($username) . '/backups', [], null, $options, false);
+    }
+
+    /**
+     * Build a downloadable archive of a restore point in the customer account's home; fetch it with the customer account's File Manager login (POST .../login), deleted after 48 hours. Also needs hosting:view and hosting:manage
+     *
+     * `POST /accounts/{id}/reseller/accounts/{username}/backups/{point}/download`
+     *
+     * @param int|string $id
+     * @param string $username
+     * @param string $point
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function resellerDownloadAccountBackup(int|string $id, string $username, string $point, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/accounts/' . self::segment($username) . '/backups/' . self::segment($point) . '/download', [], null, $options, false);
+    }
+
+    /**
+     * Restore one of the reseller's customer accounts from a restore point: everything (full), only the files and mail (files) or only the databases; its package and main domain stay. Also needs hosting:view and hosting:manage
+     *
+     * `POST /accounts/{id}/reseller/accounts/{username}/backups/{point}/restore`
+     *
+     * @param int|string $id
+     * @param string $username
+     * @param string $point
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function resellerRestoreAccountBackup(int|string $id, string $username, string $point, mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/accounts/' . self::segment($username) . '/backups/' . self::segment($point) . '/restore', [], $body, $options, false);
+    }
+
+    /**
      * Change the main domain of one of the reseller's customer accounts, at once. Its first change is free, each later one is charged to the reseller's account. Also needs hosting:view
      *
      * `POST /accounts/{id}/reseller/accounts/{username}/domain`
@@ -761,6 +959,35 @@ final class HostingService extends AbstractService
     public function listResellerPackages(int|string $id, array $options = []): mixed
     {
         return $this->send('GET', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/packages', [], null, $options, false);
+    }
+
+    /**
+     * The reseller's customer accounts deleted from its server whose backups are still held (30 days after their last backup): they can be created again. Also needs hosting:view
+     *
+     * `GET /accounts/{id}/reseller/retained`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function listResellerRetained(int|string $id, array $options = []): mixed
+    {
+        return $this->send('GET', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/retained', [], null, $options, false);
+    }
+
+    /**
+     * Create a deleted customer account again from its latest backup, under its old username and domain, owned by the reseller. No charge; it counts against the reseller's account limit. Also needs hosting:view and hosting:manage
+     *
+     * `POST /accounts/{id}/reseller/retained/{username}/restore`
+     *
+     * @param int|string $id
+     * @param string $username
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function resellerRestoreRetained(int|string $id, string $username, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/accounts/' . self::segment($id) . '/reseller/retained/' . self::segment($username) . '/restore', [], null, $options, false);
     }
 
     /**
@@ -964,5 +1191,36 @@ final class HostingService extends AbstractService
     public function listPlans(array $query = [], array $options = []): mixed
     {
         return $this->send('GET', '/hosting/v1/plans', $query, null, $options, false);
+    }
+
+    /**
+     * Your terminated accounts whose backup is still held (about 30 days after the termination): they can be claimed back
+     *
+     * `GET /retained`
+     *
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function listRetained(array $options = []): mixed
+    {
+        return $this->send('GET', '/hosting/v1/retained', [], null, $options, false);
+    }
+
+    /**
+     * Claim a terminated account back: an order of a new term (the order's price, the restore itself is free) on the same server, created from its latest backup under its old domain. Answered like an order: follow the action. Its domain or username held again fails it and releases the payment hold
+     *
+     * `POST /retained/{id}/claim`
+     *
+     * Sent with an Idempotency-Key (generated when `idempotency_key` is not in
+     * \$options), so it is retried safely after a network error or a 5xx.
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function claimRetained(int|string $id, mixed $body, array $options = []): mixed
+    {
+        return $this->send('POST', '/hosting/v1/retained/' . self::segment($id) . '/claim', [], $body, $options, true);
     }
 }

@@ -42,6 +42,19 @@ final class RegionalVPSService extends AbstractService
     }
 
     /**
+     * Every visible backup and snapshot of your servers, deleted servers' retained ones included
+     *
+     * `GET /backups`
+     *
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function listAccountBackups(array $options = []): mixed
+    {
+        return $this->send('GET', '/vps/v1/backups', [], null, $options, false);
+    }
+
+    /**
      * Datacenters of this region, with what their hosts can do
      *
      * `GET /datacenters`
@@ -172,6 +185,93 @@ final class RegionalVPSService extends AbstractService
     }
 
     /**
+     * The server's backups and snapshots, the add-on's state and prices
+     *
+     * `GET /servers/{id}/backups`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function getServerBackups(int|string $id, array $options = []): mixed
+    {
+        return $this->send('GET', '/vps/v1/servers/' . self::segment($id) . '/backups', [], null, $options, false);
+    }
+
+    /**
+     * Take a manual backup now. It uses one of the 7 slots shared with the nightly backups
+     *
+     * `POST /servers/{id}/backups`
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function createServerBackup(int|string $id, mixed $body = null, array $options = []): mixed
+    {
+        return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/backups', [], $body, $options, false);
+    }
+
+    /**
+     * Turn the backup add-on off: billing stops now and the backups are deleted after 48 hours. Snapshots stay
+     *
+     * `POST /servers/{id}/backups/disable`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function disableServerBackups(int|string $id, array $options = []): mixed
+    {
+        return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/backups/disable', [], null, $options, false);
+    }
+
+    /**
+     * Turn the backup add-on on: a nightly backup, 7 slots, billed as a percent of the plan
+     *
+     * `POST /servers/{id}/backups/enable`
+     *
+     * @param int|string $id
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function enableServerBackups(int|string $id, array $options = []): mixed
+    {
+        return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/backups/enable', [], null, $options, false);
+    }
+
+    /**
+     * Delete a backup or snapshot, also of a deleted server
+     *
+     * `DELETE /servers/{id}/backups/{backup}`
+     *
+     * @param int|string $id
+     * @param string $backup
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function deleteServerBackup(int|string $id, string $backup, array $options = []): mixed
+    {
+        return $this->send('DELETE', '/vps/v1/servers/' . self::segment($id) . '/backups/' . self::segment($backup), [], null, $options, false);
+    }
+
+    /**
+     * Restore a backup or snapshot onto the server: its disks are replaced and it restarts; everything after the backup is lost
+     *
+     * `POST /servers/{id}/backups/{backup}/restore`
+     *
+     * @param int|string $id
+     * @param string $backup
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function restoreServerBackup(int|string $id, string $backup, array $options = []): mixed
+    {
+        return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/backups/' . self::segment($backup) . '/restore', [], null, $options, false);
+    }
+
+    /**
      * A one-time browser console URL (VNC). Open it at once: it expires in expires_in seconds and works once; never store it
      *
      * `POST /servers/{id}/console`
@@ -201,7 +301,7 @@ final class RegionalVPSService extends AbstractService
     }
 
     /**
-     * Set the root password. Without one it is generated and returned once in this answer
+     * Set the root password. Without one it is generated and returned once in this answer. An image of kind routeros or other has none (422 unsupported_image: use the console)
      *
      * `POST /servers/{id}/reset-password`
      *
@@ -228,6 +328,21 @@ final class RegionalVPSService extends AbstractService
     public function resizeServer(int|string $id, mixed $body, array $options = []): mixed
     {
         return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/resize', [], $body, $options, false);
+    }
+
+    /**
+     * Take a snapshot, kept until deleted and billed per GB
+     *
+     * `POST /servers/{id}/snapshots`
+     *
+     * @param int|string $id
+     * @param mixed $body JSON request body (array or object)
+     * @param array{idempotency_key?: string, headers?: array<string, string>, region?: string} $options
+     * @return mixed The decoded JSON response
+     */
+    public function createServerSnapshot(int|string $id, mixed $body = null, array $options = []): mixed
+    {
+        return $this->send('POST', '/vps/v1/servers/' . self::segment($id) . '/snapshots', [], $body, $options, false);
     }
 
     /**
